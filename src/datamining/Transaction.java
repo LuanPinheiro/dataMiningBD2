@@ -4,13 +4,13 @@ import java.util.Map;
 
 public class Transaction {
 
-	private Map<NomeAlimento, Boolean> alimentosComprados;
+	private Map<String, Boolean> alimentosComprados;
 
-	public Transaction(Map<NomeAlimento, Boolean> alimentosComprados) {
+	public Transaction(Map<String, Boolean> alimentosComprados) {
 		this.alimentosComprados = alimentosComprados;
 	}
 	
-	public Map<NomeAlimento, Boolean> getAlimentosComprados() {
+	public Map<String, Boolean> getAlimentosComprados() {
 		return alimentosComprados;
 	}
 	

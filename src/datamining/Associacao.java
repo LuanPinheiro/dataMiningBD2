@@ -1,25 +1,27 @@
 package datamining;
 
-public class Associacao {
+import java.io.Serializable;
 
-	private int qtdX;
-	private int qtdXeY;
+public class Associacao implements Serializable{
+
+	private int qtdOcorrenciasX;
+	private int qtdOcorrenciasXeY;
 	private Double suporte;
 	private Double confianca;
 	
-	public Associacao(int qtdX, int qtdXeY, double suporte) {
-		this.qtdX = qtdX;
-		this.qtdXeY = qtdXeY;
+	public Associacao(int qtdOcorrenciasX, int qtdOcorrenciasXeY, Double suporte) {
+		this.qtdOcorrenciasX = qtdOcorrenciasX;
+		this.qtdOcorrenciasXeY = qtdOcorrenciasXeY;
 		this.suporte = suporte;
-		this.confianca = null;
+		this.calcularConfianca();
 	}
 
-	public int getQtdX() {
-		return qtdX;
+	public int qtdOcorrenciasX() {
+		return qtdOcorrenciasX;
 	}
 
-	public int getQtdXeY() {
-		return qtdXeY;
+	public int qtdOcorrenciasXeY() {
+		return qtdOcorrenciasXeY;
 	}
 
 	public Double getSuporte() {
@@ -29,8 +31,8 @@ public class Associacao {
 	public Double getConfianca() {
 		return confianca;
 	}
-	
-	public void setConfianca(Double confianca) {
-		this.confianca = confianca;
+
+	private void calcularConfianca() {
+		this.confianca = ((double) qtdOcorrenciasXeY / (double) qtdOcorrenciasX) * 100;
 	}
 }
