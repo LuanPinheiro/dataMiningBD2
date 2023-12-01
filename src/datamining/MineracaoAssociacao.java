@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +27,21 @@ public class MineracaoAssociacao {
 		return associacoes;
 	}
 	
-	public void mostrarSuportes() {
-		System.out.println("**********************\nSUPORTES: ");
+	public void mostrarSuportes(PrintWriter pw) {
+		DecimalFormat d = new DecimalFormat("0.00");
+		
+		pw.println("**********************\nSUPORTES: ");
 		for (var associacao : associacoes.entrySet()) {
-		    System.out.println(associacao.getKey() + " : " + associacao.getValue().getSuporte() + "%");
+		    pw.println(associacao.getKey() + " : " + d.format(associacao.getValue().getSuporte()) + "%");
 		}
 	}
 	
-	public void mostrarConfianca() {
-		System.out.println("\n\n**********************\nCONFIANCA: ");
+	public void mostrarConfianca(PrintWriter pw) {
+		DecimalFormat d = new DecimalFormat("0.00");
+		
+		pw.println("\n\n**********************\nCONFIANCA: ");
 		for (var associacao : associacoes.entrySet()) {
-		    System.out.println(associacao.getKey() + " : " + associacao.getValue().getConfianca() + "%");
+		    pw.println(associacao.getKey() + " : " + d.format(associacao.getValue().getConfianca()) + "%");
 		}
 	}
 	
@@ -43,14 +49,8 @@ public class MineracaoAssociacao {
 		
 		int totalRegistros = transacoes.size();
 		
-		List<String> colunas = transacoes.stream()
-				.map((t) -> t.getAlimentosComprados())
-				.map((alimento) -> alimento.keySet())
-				.distinct()
-				.toList()
-				.get(0)
-				.stream()
-				.toList();
+		List<String> colunas = new ArrayList<String>();
+		colunas.addAll(transacoes.get(0).getAlimentosComprados().keySet());
 		
 		for(int i = 0; i < colunas.size(); i++) {
 			for(int j = i+1; j < colunas.size(); j++) {
@@ -87,21 +87,31 @@ public class MineracaoAssociacao {
 		}
 	}
 	
-	public String salvarAssociacoes() {
+	public void salvarAssociacoesObjeto() {
 		System.out.println("\n\n**********************\n");
-		FileOutputStream fos = null;
-	    ObjectOutputStream out = null;
 	    try {
-	        fos = new FileOutputStream("associacoesJavaObject",false);
-	        out = new ObjectOutputStream(fos);
+	    	FileOutputStream fos = new FileOutputStream("associacoesJavaObject",false);
+	    	ObjectOutputStream out = new ObjectOutputStream(fos);
 	        out.writeObject(associacoes);
-	        try(PrintWriter outTxt = new PrintWriter("associacoes.txt")  ){
-	            outTxt.println("Teste");
-	        }
 	        out.close();
-	        return "Associações salvas como objeto e como txt sucesso";
+	        fos.close();
+	        System.out.println("Associações salvas como objeto com sucesso");
 	    } catch (IOException ex) {
-	    	return "Erro ao salvar associações";
+	    	System.out.println("Erro ao salvar associações como objeto");
+	    }
+	}
+	
+	public void salvarAssociacoesTxt() {
+		System.out.println("\n\n**********************\n");
+	    try {
+	        PrintWriter outTxt = new PrintWriter("associacoes.txt");
+	        outTxt.println("Suporte mínimo: " + (suporteMinimo * 100) + "%");
+        	mostrarSuportes(outTxt);
+            mostrarConfianca(outTxt);
+	        outTxt.close();
+	        System.out.println("Associações salvas como txt com sucesso");
+	    } catch (IOException ex) {
+	    	System.out.println("Erro ao salvar associações como txt");
 	    }
 	}
 }

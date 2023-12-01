@@ -1,5 +1,6 @@
 package datamining;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +12,16 @@ public class Main {
 		List<Transaction> transacoes = new ArrayList<Transaction>();
 		populate(transacoes);
 		
+		
 		MineracaoAssociacao algoritmo = new MineracaoAssociacao(transacoes, 0.2);
-		algoritmo.mostrarSuportes();
-		algoritmo.mostrarConfianca();
-		System.out.println(algoritmo.salvarAssociacoes());
+		
+		PrintWriter consolePrint = new PrintWriter(System.out);
+		algoritmo.mostrarSuportes(consolePrint);
+		algoritmo.mostrarConfianca(consolePrint);
+		consolePrint.flush();
+		
+		algoritmo.salvarAssociacoesObjeto();
+		algoritmo.salvarAssociacoesTxt();
 	}
 	
 	private static void populate(List<Transaction> transacoes) {
